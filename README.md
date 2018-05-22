@@ -1,5 +1,7 @@
 # tower-slack
 
+[![Build Status](https://travis-ci.org/leeeboo/tower-slack.svg?branch=master)](https://travis-ci.org/leeeboo/tower-slack)
+
 make
 
 export DOCKER_USER="YOUR_NAME"
