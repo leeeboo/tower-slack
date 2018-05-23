@@ -137,22 +137,22 @@ func (this *Message) ToSlackMessage(event string) *SlackMessage {
 
 		switch this.Action {
 		case "assigned":
-			message = fmt.Sprintf(actionFmt, this.Data.Todo.Handler.Nickname, this.Data.Todo.Title, this.Data.Todo.Assignee.Nickname)
+			message = fmt.Sprintf(actionFmt, this.Data.Todo.Title, this.Data.Todo.Assignee.Nickname)
 			break
 		case "unassigned":
-			message = fmt.Sprintf(actionFmt, this.Data.Todo.Handler.Nickname, this.Data.Todo.Assignee.Nickname, this.Data.Todo.Title)
+			message = fmt.Sprintf(actionFmt, this.Data.Todo.Assignee.Nickname, this.Data.Todo.Title)
 			break
 		case "deadline_changed":
-			message = fmt.Sprintf(actionFmt, this.Data.Todo.Handler.Nickname, this.Data.Todo.Title, this.Data.Todo.DueAt)
+			message = fmt.Sprintf(actionFmt, this.Data.Todo.Title, this.Data.Todo.DueAt)
 			break
 		case "moved":
-			message = fmt.Sprintf(actionFmt, this.Data.Todo.Handler.Nickname, this.Data.Todo.Title, this.Data.TodoList.Title)
+			message = fmt.Sprintf(actionFmt, this.Data.Todo.Title, this.Data.TodoList.Title)
 			break
 		case "commented":
-			message = fmt.Sprintf(actionFmt, this.Data.Todo.Handler.Nickname, this.Data.Todo.Title, this.Data.Comment.Content)
+			message = fmt.Sprintf(actionFmt, this.Data.Todo.Title, this.Data.Comment.Content)
 			break
 		default:
-			message = fmt.Sprintf(actionFmt, this.Data.Todo.Handler.Nickname, this.Data.Todo.Title)
+			message = fmt.Sprintf(actionFmt, this.Data.Todo.Title)
 		}
 
 		a.AuthorName = this.Data.Todo.Handler.Nickname
