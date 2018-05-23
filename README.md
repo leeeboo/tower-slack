@@ -1,6 +1,6 @@
 # tower-slack
 
-[![Build Status](https://travis-ci.org/leeeboo/tower-slack.svg?branch=master)](https://travis-ci.org/leeeboo/tower-slack) [![Coverage Status](https://coveralls.io/repos/github/leeeboo/tower-slack/badge.svg)](https://coveralls.io/github/leeeboo/tower-slack) [![Docker Status](https://dockerbuildbadges.quelltext.eu/status.svg?organization=leeeboo&repository=tower-slack)](https://hub.docker.com/r/leeeboo/tower-slack/builds/)
+[![Build Status](https://travis-ci.org/leeeboo/tower-slack.svg?branch=master)](https://travis-ci.org/leeeboo/tower-slack) [![Coverage Status](https://coveralls.io/repos/github/leeeboo/tower-slack/badge.svg?branch=master)](https://coveralls.io/github/leeeboo/tower-slack?branch=master) [![Docker Status](https://dockerbuildbadges.quelltext.eu/status.svg?organization=leeeboo&repository=tower-slack)](https://hub.docker.com/r/leeeboo/tower-slack/builds/)
 
 ## BUILD
 
