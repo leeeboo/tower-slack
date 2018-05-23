@@ -45,6 +45,8 @@ func tower(w http.ResponseWriter, r *http.Request) {
 
 	body, err := ioutil.ReadAll(r.Body)
 
+	log.Println(string(body))
+
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -63,12 +65,7 @@ func tower(w http.ResponseWriter, r *http.Request) {
 
 	event := r.Header.Get("X-Tower-Event")
 
-	log.Println(event)
-	log.Println(string(body))
-
 	slackMessage := message.ToSlackMessage(event)
-
-	log.Println(slackMessage)
 
 	if slackMessage == nil {
 		log.Println(err)
@@ -122,22 +119,29 @@ func sendToSlack(api string, slackMsg SlackMessage) error {
 	return nil
 }
 
-func main() {
+func server() *http.Server {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/services/{appid}/{firstid}/{secondid}", tower).Methods("POST")
 
 	handler := handlers.CORS()(r)
-	handler = handlers.CombinedLoggingHandler(os.Stdout, r)
+	handler = handlers.CombinedLoggingHandler(os.Stdout, handler)
 	handler = gziphandler.GzipHandler(handler)
-
-	interrupt := make(chan os.Signal, 1)
-	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
 
 	srv := &http.Server{
 		Addr:    ":" + port,
 		Handler: handler,
 	}
+
+	return srv
+}
+
+func main() {
+
+	srv := server()
+
+	interrupt := make(chan os.Signal, 1)
+	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
 
 	// this channel is for graceful shutdown:
 	// if we receive an error, we can send it here to notify the server to be stopped

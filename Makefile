@@ -34,5 +34,5 @@ push:
 .PHONY: test
 test:
 	rm -f ./.testCoverage.txt
-	go test $(shell go list ./... | grep -v /vendor/) -v -coverprofile ./.testCoverage.txt
+	go test $(shell go list ./... | grep -v /vendor/) -coverprofile ./.testCoverage.txt
 	go tool cover -func=./.testCoverage.txt | grep 'total:' | grep 'statements' | awk '{print $$3}' | xargs echo "FullCoverage:"
