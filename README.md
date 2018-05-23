@@ -1,6 +1,7 @@
 # tower-slack
 
 [![Build Status](https://travis-ci.org/leeeboo/tower-slack.svg?branch=master)](https://travis-ci.org/leeeboo/tower-slack)
+[![Docker Status](https://dockerbuildbadges.quelltext.eu/status.svg?organization=leeeboo&repository=tower-slack)](https://hub.docker.com/r/leeeboo/tower-slack/builds/)
 
 ## BUILD
 
