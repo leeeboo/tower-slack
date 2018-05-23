@@ -10,14 +10,14 @@ type Message struct {
 }
 
 type Payload struct {
-	Project       *Project    `json:"project"`
-	TodoList      *TodoList   `json:"todolist"`
-	Todo          *Todo       `json:"todo"`
-	TodoCheckitem *Todo       `json:"todos::checkitem"`
-	Comment       *Comment    `json:"comment"`
-	Topic         *Topic      `json:"topic"`
-	Document      *Document   `json:"document"`
-	Attachment    *Attachment `json:"attachment"`
+	Project       Project    `json:"project"`
+	TodoList      TodoList   `json:"todolist"`
+	Todo          Todo       `json:"todo"`
+	TodoCheckitem Todo       `json:"todos::checkitem"`
+	Comment       Comment    `json:"comment"`
+	Topic         Topic      `json:"topic"`
+	Document      Document   `json:"document"`
+	Attachment    Attachment `json:"attachment"`
 }
 
 type Project struct {
@@ -26,19 +26,19 @@ type Project struct {
 }
 
 type TodoList struct {
-	Guid      string  `json:"guid"`
-	Title     string  `json:"title"`
-	UpdatedAt string  `json:"updated_at"`
-	Handler   *Person `json:"handler"`
+	Guid      string `json:"guid"`
+	Title     string `json:"title"`
+	UpdatedAt string `json:"updated_at"`
+	Handler   Person `json:"handler"`
 }
 
 type Todo struct {
-	Guid      string  `json:"guid"`
-	Title     string  `json:"title"`
-	UpdatedAt string  `json:"updated_at"`
-	Handler   *Person `json:"handler"`
-	DueAt     string  `json:"due_at"`
-	Assignee  *Person `json:"assignee"`
+	Guid      string `json:"guid"`
+	Title     string `json:"title"`
+	UpdatedAt string `json:"updated_at"`
+	Handler   Person `json:"handler"`
+	DueAt     string `json:"due_at"`
+	Assignee  Person `json:"assignee"`
 }
 
 type Comment struct {
@@ -47,24 +47,24 @@ type Comment struct {
 }
 
 type Topic struct {
-	Guid      string  `json:"guid"`
-	Title     string  `json:"title"`
-	UpdatedAt string  `json:"updated_at"`
-	Handler   *Person `json:"handler"`
+	Guid      string `json:"guid"`
+	Title     string `json:"title"`
+	UpdatedAt string `json:"updated_at"`
+	Handler   Person `json:"handler"`
 }
 
 type Document struct {
-	Guid      string  `json:"guid"`
-	Title     string  `json:"title"`
-	UpdatedAt string  `json:"updated_at"`
-	Handler   *Person `json:"handler"`
+	Guid      string `json:"guid"`
+	Title     string `json:"title"`
+	UpdatedAt string `json:"updated_at"`
+	Handler   Person `json:"handler"`
 }
 
 type Attachment struct {
-	Guid      string  `json:"guid"`
-	Title     string  `json:"title"`
-	UpdatedAt string  `json:"updated_at"`
-	Handler   *Person `json:"handler"`
+	Guid      string `json:"guid"`
+	Title     string `json:"title"`
+	UpdatedAt string `json:"updated_at"`
+	Handler   Person `json:"handler"`
 }
 
 type Person struct {
