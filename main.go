@@ -132,8 +132,6 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/services/{appid}/{firstid}/{secondid}", tower).Methods("POST")
 
-	//https://hooks.slack.com/services/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
-
 	handler := handlers.CORS()(r)
 	handler = handlers.CombinedLoggingHandler(os.Stdout, r)
 	handler = gziphandler.GzipHandler(handler)
@@ -174,7 +172,6 @@ func main() {
 	logs.Info("The service is shutting down...")
 
 	if err := srv.Shutdown(context.Background()); err != nil {
-		// Error from closing listeners, or context timeout:
 		logs.Error("HTTP server Shutdown: %v", err)
 	} else {
 		logs.Info("Done")
