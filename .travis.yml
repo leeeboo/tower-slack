@@ -2,6 +2,13 @@ language: go
 
 go:
   - 1.10.2
-
+env:
+  secure: "LJL3sjB9nOYhbUwgvNB/omvUM5dM+V6uO48rSkck+iaOvg369kh0s/YlsGDiPI0zkUQA2bUwTn6IL/tSZI3tJBjxO89z4HrbenkS1j1WyHC1wQxUnu9nw3ajRqX15YZi5JIIqwjNrhrDxTxAwy1Na4rdtYabC/1OSjQdVEhSdFq4XJWwDFhLKJSSFFu2GPsJI1+39qiIfF8zIVA6CXjfGE++gt74qkiPePAA8Tiop+OTVWEFha2lmta1hpiCfgDc6On1uYlXdUMQ1iCHhVGTTy8+XYr7haJARD48Qrw5CPK0IHQl/WgNKWwZwj2/kUZjXXfbboVGkteSyPasmc98Y/X+pF48H1H4jmcdYyEV8caDF9NKDN8muIGP/P8Z51lqETyr4JZKjskqMuHmpYQWblOJEpOxmS7Ke2As45UKDvFzxHsUuOoh4DUeS3jMsL+apQs3XDlagwLaSZy7+kJ7OIXdlwc1D+cPCR9ZDmqr0hdqHtUN189l2pR12UjpKpjhJUTLDLw/XFbdNVE2IHTm5vPDasxFeBR/cCyJQIITNTkDnXt4pwclDue0mF7tS6K6uSZjBBYZ9W30Xvh0evnEdIOb0t1TFeVmgT0+tp9shk/R5eaheOe0krye+kIytLbc2os/1h0fhhK5oecYLJAK/4a3ZNKwWYiSzR+THSpLh/I="
+install:
+  - go get golang.org/x/tools/cmd/cover
+  - go get github.com/mattn/goveralls
 script:
+  - go tool vet .
+  - go test -v -covermode=count -coverprofile=coverage.out
+  - $HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN
   - go build .
