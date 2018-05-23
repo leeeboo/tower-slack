@@ -66,11 +66,11 @@ func tower(w http.ResponseWriter, r *http.Request) {
 	log.Println(event)
 	log.Println(string(body))
 
-	text := message.ToSlackMessage(event)
+	slackMessage := message.ToSlackMessage(event)
 
-	log.Println(text)
+	log.Println(slackMessage)
 
-	if text == "" {
+	if slackMessage == nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -78,7 +78,7 @@ func tower(w http.ResponseWriter, r *http.Request) {
 
 	apiUrl := fmt.Sprintf("https://hooks.slack.com%s", r.URL.Path)
 
-	err = sendToSlack(apiUrl, text)
+	err = sendToSlack(apiUrl, *slackMessage)
 
 	if err != nil {
 		log.Println(err)
@@ -89,14 +89,7 @@ func tower(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func sendToSlack(api string, text string) error {
-
-	type SlackMessage struct {
-		Text string `json:"text"`
-	}
-
-	var slackMsg SlackMessage
-	slackMsg.Text = text
+func sendToSlack(api string, slackMsg SlackMessage) error {
 
 	buf := new(bytes.Buffer)
 
@@ -106,6 +99,8 @@ func sendToSlack(api string, text string) error {
 	err := enc.Encode(slackMsg)
 
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+
+	log.Println(buf.String())
 
 	resp, err := http.Post(api, "application/json", strings.NewReader(buf.String()))
 
