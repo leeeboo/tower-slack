@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -12,17 +13,22 @@ import (
 	"github.com/gorilla/mux"
 )
 
+var testapi string
+
+func init() {
+
+	testapi = os.Getenv("TESTAPIPATH")
+
+	if testapi == "" {
+		panic("Env `TESTAPIPATH` must be set (example: /services/XXX/XXX/XXXXXX)")
+	}
+}
+
 func Test_server(t *testing.T) {
 
 	s := server()
 	if s == nil {
 		t.Fatal("server init error.")
-	}
-
-	testapi := os.Getenv("TESTAPIPATH")
-
-	if testapi == "" {
-		t.Fatal("Env `TESTAPIPATH` must be set (example: /services/XXX/XXX/XXXXXX)")
 	}
 
 	towerSecret = "test"
@@ -67,6 +73,10 @@ func Test_server(t *testing.T) {
 
 	e.POST("/services/fake/fake/fake").WithHeader("X-Tower-Event", "todos").WithHeader("X-Tower-Signature", towerSecret).WithJSON(o).Expect().Status(http.StatusInternalServerError)
 
+	o["action"] = "fake"
+
+	e.POST(testapi).WithHeader("X-Tower-Event", "todos").WithHeader("X-Tower-Signature", towerSecret).WithJSON(o).Expect().Status(http.StatusInternalServerError)
+
 	data, err := ioutil.ReadFile("./test.msg")
 
 	if err != nil {
@@ -82,7 +92,6 @@ func Test_server(t *testing.T) {
 	}
 
 	for event, mlist := range list {
-		t.Log(event, mlist)
 
 		for _, msg := range mlist {
 			e.POST(testapi).WithHeader("X-Tower-Event", event).WithHeader("X-Tower-Signature", towerSecret).WithJSON(msg).Expect().Status(http.StatusOK)
@@ -90,5 +99,42 @@ func Test_server(t *testing.T) {
 	}
 
 	return
+}
 
+type errReader int
+
+func (errReader) Read(p []byte) (n int, err error) {
+	return 0, errors.New("test error")
+}
+
+func TestTower(t *testing.T) {
+
+	testRequest := httptest.NewRequest(http.MethodPost, testapi, errReader(0))
+	testRequest.Header.Set("X-Tower-Signature", towerSecret)
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(tower)
+
+	// Our handlers satisfy http.Handler, so we can call their ServeHTTP method
+	// directly and pass in our Request and ResponseRecorder.
+	handler.ServeHTTP(rr, testRequest)
+
+	// Check the status code is what we expect.
+	if rr.Code != http.StatusInternalServerError {
+		t.Fatalf("handler returned OK status: got %v want %v", rr.Code, http.StatusInternalServerError)
+	}
+
+	// Check the response body is what we expect.
+}
+
+func TestSendToSlack(t *testing.T) {
+
+	var slackMsg SlackMessage
+	slackMsg.Text = "test"
+
+	err := sendToSlack("foo", slackMsg)
+
+	if err == nil {
+		t.Fatal("handler returned OK status: got OK want error")
+	}
 }

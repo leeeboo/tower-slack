@@ -45,8 +45,6 @@ func tower(w http.ResponseWriter, r *http.Request) {
 
 	body, err := ioutil.ReadAll(r.Body)
 
-	log.Println(string(body))
-
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -97,8 +95,6 @@ func sendToSlack(api string, slackMsg SlackMessage) error {
 
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 
-	log.Println(buf.String())
-
 	resp, err := http.Post(api, "application/json", strings.NewReader(buf.String()))
 
 	if err != nil {
@@ -106,11 +102,7 @@ func sendToSlack(api string, slackMsg SlackMessage) error {
 	}
 
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-
-	if err != nil {
-		return err
-	}
+	body, _ := ioutil.ReadAll(resp.Body)
 
 	if string(body) != "ok" {
 		return errors.New(fmt.Sprintf("Slack api response error `%s`", string(body)))
