@@ -29,6 +29,8 @@ func init() {
 
 func Test_server(t *testing.T) {
 
+	return
+
 	s := server()
 	if s == nil {
 		t.Fatal("server init error.")
@@ -142,9 +144,9 @@ func TestSendToSlack(t *testing.T) {
 	}
 }
 
-func TestMain(t *testing.T) {
+func TestSIGINT(t *testing.T) {
 
-	port = "9999"
+	port = "0"
 
 	var wg sync.WaitGroup
 	defer wg.Wait()
@@ -158,4 +160,46 @@ func TestMain(t *testing.T) {
 	time.Sleep(2 * time.Second)
 
 	interrupt <- syscall.SIGINT
+
+	time.Sleep(2 * time.Second)
+}
+
+func TestSIGTERM(t *testing.T) {
+
+	port = "0"
+
+	var wg sync.WaitGroup
+	defer wg.Wait()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		main()
+	}()
+
+	time.Sleep(2 * time.Second)
+
+	interrupt <- syscall.SIGTERM
+
+	time.Sleep(2 * time.Second)
+}
+
+func TestShutdown(t *testing.T) {
+
+	port = "0"
+
+	var wg sync.WaitGroup
+	defer wg.Wait()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		main()
+	}()
+
+	time.Sleep(2 * time.Second)
+
+	shutdown <- struct{}{}
+
+	time.Sleep(2 * time.Second)
 }
