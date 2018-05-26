@@ -29,8 +29,6 @@ func init() {
 
 func Test_server(t *testing.T) {
 
-	return
-
 	s := server()
 	if s == nil {
 		t.Fatal("server init error.")

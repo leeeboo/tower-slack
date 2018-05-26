@@ -142,8 +142,6 @@ func main() {
 		if err != nil {
 			shutdown <- struct{}{}
 			log.Println(err)
-		} else {
-			log.Println("The service is ready to listen and serve.", port)
 		}
 	}()
 
