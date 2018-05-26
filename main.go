@@ -29,8 +29,6 @@ var shutdown = make(chan struct{}, 1)
 
 func init() {
 
-	log.SetFlags(log.Lshortfile | log.LstdFlags)
-
 	flag.StringVar(&towerSecret, "secret", "", "The secret of your tower webhook.")
 	flag.StringVar(&port, "port", "8080", "Port to listen (default 8080).")
 
