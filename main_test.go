@@ -7,7 +7,10 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"sync"
+	"syscall"
 	"testing"
+	"time"
 
 	"github.com/gavv/httpexpect"
 	"github.com/gorilla/mux"
@@ -137,4 +140,22 @@ func TestSendToSlack(t *testing.T) {
 	if err == nil {
 		t.Fatal("handler returned OK status: got OK want error")
 	}
+}
+
+func TestMain(t *testing.T) {
+
+	port = "9999"
+
+	var wg sync.WaitGroup
+	defer wg.Wait()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		main()
+	}()
+
+	time.Sleep(2 * time.Second)
+
+	interrupt <- syscall.SIGINT
 }

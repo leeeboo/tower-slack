@@ -14,12 +14,6 @@
   version = "v1.5"
 
 [[projects]]
-  name = "github.com/astaxie/beego"
-  packages = ["logs"]
-  revision = "bf5c5626ab429e66d88602e1ab1ab5fbf4629a01"
-  version = "v1.9.2"
-
-[[projects]]
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   revision = "346938d642f2ec3594ed81d874461961cd0faa76"
@@ -210,6 +204,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "a7e32ad1d49887aa5680f5232563e501f7103dcee61df1e87f8df6749daf439a"
+  inputs-digest = "980b17785e09a30184028de82abc724c29cc78c5f84ff266a1122c31fd9c200d"
   solver-name = "gps-cdcl"
   solver-version = 1

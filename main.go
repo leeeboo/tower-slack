@@ -17,7 +17,6 @@ import (
 	"syscall"
 
 	"github.com/NYTimes/gziphandler"
-	"github.com/astaxie/beego/logs"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
@@ -25,13 +24,21 @@ import (
 var towerSecret string
 var port string
 
+var interrupt = make(chan os.Signal, 1)
+var shutdown = make(chan struct{}, 1)
+
 func init() {
+
+	log.SetFlags(log.Lshortfile | log.LstdFlags)
+
 	flag.StringVar(&towerSecret, "secret", "", "The secret of your tower webhook.")
 	flag.StringVar(&port, "port", "8080", "Port to listen (default 8080).")
 
 	flag.Parse()
 
 	towerSecret = strings.TrimSpace(towerSecret)
+
+	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
 }
 
 func tower(w http.ResponseWriter, r *http.Request) {
@@ -132,39 +139,33 @@ func main() {
 
 	srv := server()
 
-	interrupt := make(chan os.Signal, 1)
-	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
-
-	// this channel is for graceful shutdown:
-	// if we receive an error, we can send it here to notify the server to be stopped
-	shutdown := make(chan struct{}, 1)
 	go func() {
 		err := srv.ListenAndServe()
 		if err != nil {
 			shutdown <- struct{}{}
-			logs.Info(err)
+			log.Println(err)
+		} else {
+			log.Println("The service is ready to listen and serve.", port)
 		}
-
 	}()
-	logs.Info("The service is ready to listen and serve.", port)
 
 	select {
 	case killSignal := <-interrupt:
 		switch killSignal {
 		case os.Interrupt:
-			logs.Info("Got SIGINT...")
+			log.Println("Got SIGINT...")
 		case syscall.SIGTERM:
-			logs.Info("Got SIGTERM...")
+			log.Println("Got SIGTERM...")
 		}
 	case <-shutdown:
-		logs.Error("Got an error...")
+		log.Println("Got an error...")
 	}
 
-	logs.Info("The service is shutting down...")
+	log.Println("The service is shutting down...")
 
 	if err := srv.Shutdown(context.Background()); err != nil {
-		logs.Error("HTTP server Shutdown: %v", err)
+		log.Printf("HTTP server Shutdown: %v", err)
 	} else {
-		logs.Info("Done")
+		log.Println("Done")
 	}
 }
